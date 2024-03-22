@@ -1,0 +1,320 @@
+
+
+step1:
+
+Azure subscription 1
+
+Subscription ID:   5cf19617-a9df-4fa7-a224-12d149e05cc2
+
+=================================================================
+
+step2:
+
+create a resource group
+
+Azure subscription 1
+Resource group
+istio-test
+Region
+East US
+
+======================================================================
+
+step3:
+
+Sign in to the Azure portal.
+Browse(search in search place) to Microsoft Entra ID > Properties.
+Scroll down to the Tenant ID section and you can find
+
+Tenant Id:  dffc66a1-cf11-4cd4-87e6-1133bbcc181c
+
+=========================================================================
+
+azure login steps in visual studio code:
+
+ open any visual studio code azure and open terminal 
+
+
+step4:
+
+>> az login --tenant dffc66a1-cf11-4cd4-87e6-1133bbcc181c
+
+
+[
+  {
+    "cloudName": "AzureCloud",
+    "homeTenantId": "dffc66a1-cf11-4cd4-87e6-1133bbcc181c",
+    "id": "5cf19617-a9df-4fa7-a224-12d149e05cc2",
+    "isDefault": true,
+    "managedByTenants": [],
+    "name": "Azure subscription 1",
+    "state": "Enabled",
+    "tenantId": "dffc66a1-cf11-4cd4-87e6-1133bbcc181c",
+    "user": {
+      "name": "n.pradeepnettem@gmail.com",
+      "type": "user"
+    }
+  }
+]
+
+
+============================================
+step5:
+
+set the account with subscription the Azure CLI. Use "id" above
+
+az account set --subscription "<subscription_id_or_subscription_name>"
+
+az account set --subscription "5cf19617-a9df-4fa7-a224-12d149e05cc2"
+
+
+
+===========
+$ az account list
+[
+  {
+    "cloudName": "AzureCloud",
+    "homeTenantId": "70448379-86c3-42ef-8ea7-6a327535a46c",
+    "id": "e4a6b849-d974-4e89-9022-a47fe9df13f8",
+    "isDefault": false,
+    "managedByTenants": [],
+    "name": "Azure subscription 1",
+    "state": "Enabled",
+    "tenantId": "70448379-86c3-42ef-8ea7-6a327535a46c",
+    "user": {
+      "name": "pavi.rushi.uk@gmail.com",
+      "type": "user"
+    }
+  },
+  {
+    "cloudName": "AzureCloud",
+    "homeTenantId": "31a963a7-959e-42a9-885d-08eaaf81d96e",
+    "id": "41358d7f-fcc5-4315-ad42-429c6447acee",
+    "isDefault": false,
+    "managedByTenants": [],
+    "name": "Azure subscription 1",
+    "state": "Enabled",
+    "tenantId": "31a963a7-959e-42a9-885d-08eaaf81d96e",
+    "user": {
+      "name": "prrg63@gmail.com",
+      "type": "user"
+    }
+  },
+  {
+    "cloudName": "AzureCloud",
+    "homeTenantId": "dffc66a1-cf11-4cd4-87e6-1133bbcc181c",
+    "id": "5cf19617-a9df-4fa7-a224-12d149e05cc2",
+    "isDefault": true,
+    "managedByTenants": [],
+    "name": "Azure subscription 1",
+    "state": "Enabled",
+    "tenantId": "dffc66a1-cf11-4cd4-87e6-1133bbcc181c",
+    "user": {
+      "name": "n.pradeepnettem@gmail.com",
+      "type": "user"
+    }
+  }
+]
+
+========================
+
+If you're creating a service principal from Git Bash, set the MSYS_NO_PATHCONV environment variable. (This step isn't necessary if you're using Cloud Shell.)
+
+step1:
+
+export MSYS_NO_PATHCONV=1
+
+
+==============================
+
+step6:
+
+Create a Service Principal
+Next, create a Service Principal. A Service Principal is an application within Azure Active Directory with the authentication tokens Terraform needs to perform actions on your behalf. Update the <SUBSCRIPTION_ID> with the subscription ID you specified in the previous step.
+
+
+>> az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/5cf19617-a9df-4fa7-a224-12d149e05cc2"
+
+az ad sp create-for-rbac --name devops-test --role Contributor --scopes /subscriptions/5cf19617-a9df-4fa7-a224-12d149e05cc2
+
+
+Found an existing application instance: (id) 01afa76f-2f50-434b-b415-3bface1a0be5. We will patch it.
+Creating 'Contributor' role assignment under scope '/subscriptions/5cf19617-a9df-4fa7-a224-12d149e05cc2'
+The output includes credentials that you must protect. Be sure that you do not include these credentials in your code or check the credentials into your source control. For more information, see https://aka.ms/azadsp-cli
+{
+  "appId": "c26c5bcd-3377-478d-a420-3ba447b07feb",
+  "displayName": "devops-test",
+  "password": "NaC8Q~wWln552OKXV8NU~7jqt_kraFFYMGzVxci2",
+  "tenant": "dffc66a1-cf11-4cd4-87e6-1133bbcc181c"
+}
+
+========================================
+
+environment variable
+
+export ARM_CLIENT_ID="<APPID_VALUE>"
+export ARM_CLIENT_SECRET="<PASSWORD_VALUE>"
+export ARM_SUBSCRIPTION_ID="<SUBSCRIPTION_ID>"
+export ARM_TENANT_ID="<TENANT_VALUE>"
+
+export ARM_CLIENT_ID="c26c5bcd-3377-478d-a420-3ba447b07feb"
+export ARM_CLIENT_SECRET="NaC8Q~wWln552OKXV8NU~7jqt_kraFFYMGzVxci2"
+export ARM_SUBSCRIPTION_ID="5cf19617-a9df-4fa7-a224-12d149e05cc2"
+export ARM_TENANT_ID="dffc66a1-cf11-4cd4-87e6-1133bbcc181c"
+
+
+==============================
+
+####################################################
+after the configuration start the writing terraform
+#####################################################
+
+after code ready 
+
+1. terraform init
+2. terraform fmt
+3. terraform validate 
+4. terraform plan
+5. terraform apply
+
+
+-------------
+
+aks_cluster_id = "/subscriptions/5cf19617-a9df-4fa7-a224-12d149e05cc2/resourcegroups/aks-resource-group/providers/Microsoft.ContainerService/managedClusters/myAKSCluster"
+
+
+connect to aks cluster:
+
+az login
+az account set --subscription 5cf19617-a9df-4fa7-a224-12d149e05cc2
+az aks get-credentials --resource-group aks-resource-group --name myAKSCluster --overwrite-existing
+az aks get-credentials --resource-group aks-resource-group --name myAKSCluster --overwrite-existing
+
+ouput above commands:
+ az aks get-credentials --resource-group aks-resource-group --name myAKSCluster --overwrite-existing
+Merged "myAKSCluster" as current context in C:\Users\Realme\.kube\config
+
+
+example commands:
+kubectl get deployments --all-namespaces=true
+kubectl get deployments --namespace <namespace-name>
+kubectl describe deployment <deployment-name> --namespace <namespace-name>
+kubectl logs -l <label-key>=<label-value>
+
+
+error:
+
+
+
+kubelogin is not installed which is required to connect to AAD enabled cluster.
+
+To learn more, please go to https://aka.ms/aks/kubelogin
+E0321 22:34:48.602439   19188 memcache.go:265] couldn't get current server API group list: Get "https://someapplication-dk4adezv.hcp.eastus.azmk8s.io:443/api?timeout=32s": getting credentials: exec: executable kubelogin not found   
+
+It looks like you are trying to use a client-go credential plugin that is not installed.
+
+To learn more about this feature, consult the documentation available at:
+      https://kubernetes.io/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins
+
+
+kubelogin is not installed which is required to connect to AAD enabled cluster.
+
+To learn more, please go to https://aka.ms/aks/kubelogin
+E0321 22:34:48.614233   19188 memcache.go:265] couldn't get current server API group list: Get "https://someapplication-dk4adezv.hcp.eastus.azmk8s.io:443/api?timeout=32s": getting credentials: exec: executable kubelogin not found   
+
+It looks like you are trying to use a client-go credential plugin that is not installed.
+
+To learn more about this feature, consult the documentation available at:
+      https://kubernetes.io/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins
+
+
+fixed the error:
+
+Examples from AI knowledge base:
+az aks get-credentials --name myAKSCluster --overwrite-existing --resource-group aks-resource-group
+Get access credentials for a managed Kubernetes cluster. (autogenerated)
+
+
+
+az aks get-credentials --admin --name myAKSCluster --resource-group aks-resource-group
+Get access credentials for a managed Kubernetes cluster. (autogenerated)
+
+az aks list
+List managed Kubernetes clusters. (autogenerated)
+
+=====================================
+I am able to connect the cluster 
+output:
+$ kubectl get nodes
+NAME                              STATUS   ROLES   AGE   VERSION
+aks-default-11357824-vmss000000   Ready    agent   41m   v1.27.9
+
+
+------------------------------------------
+
+error
+local_file.kube_config: Creating...
+local_file.kube_config: Creation complete after 0s [id=361811e3b3a4f727ee4d21df8d7db2ec737d2ce4]
+null_resource.set-kube-config: Creating...
+null_resource.set-kube-config: Provisioning with 'local-exec'...
+null_resource.set-kube-config (local-exec): Executing: ["cmd" "/C" "az aks get-credentials -n myAKSCluster -g aks-resource-group --file \".kube/myAKSCluster\" --admin --overwrite-existing"]
+null_resource.set-kube-config (local-exec): ERROR: The command failed with an unexpected error. Here is the traceback:
+null_resource.set-kube-config (local-exec): ERROR: [WinError 123] The filename, directory name, or volume label syntax is incorrect: '".kube'
+null_resource.set-kube-config (local-exec): Traceback (most recent call last):
+null_resource.set-kube-config (local-exec):   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\knack/cli.py", line 233, in invoke
+null_resource.set-kube-config (local-exec):   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\azure/cli/core/commands/__init__.py", line 663, in execute
+null_resource.set-kube-config (local-exec):   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\azure/cli/core/commands/__init__.py", line 726, in _run_jobs_serially
+null_resource.set-kube-config (local-exec):   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\azure/cli/core/commands/__init__.py", line 697, in _run_job
+null_resource.set-kube-config (local-exec):   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\azure/cli/core/commands/__init__.py", line 333, in __call__
+null_resource.set-kube-config (local-exec):   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\azure/cli/core/commands/command_operation.py", line 121, in handler
+null_resource.set-kube-config (local-exec):   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\azure/cli/command_modules/acs/custom.py", line 1089, in aks_get_credentials
+null_resource.set-kube-config (local-exec):   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\azure/cli/command_modules/acs/custom.py", line 1207, in _print_or_merge_credentials
+null_resource.set-kube-config (local-exec):   File "os.py", line 225, in makedirs
+null_resource.set-kube-config (local-exec): OSError: [WinError 123] The filename, directory name, or volume label syntax is incorrect: '".kube'
+null_resource.set-kube-config (local-exec): To open an issue, please run: 'az feedback'
+╷
+│ Error: local-exec provisioner error
+│
+│   with null_resource.set-kube-config,
+│   on istio.tf line 17, in resource "null_resource" "set-kube-config":
+│   17:   provisioner "local-exec" {
+│
+│ Error running command 'az aks get-credentials -n myAKSCluster -g aks-resource-group --file ".kube/myAKSCluster"   
+│ --admin --overwrite-existing': exit status 1. Output: ERROR: The command failed with an unexpected error. Here is 
+│ the traceback:
+│ ERROR: [WinError 123] The filename, directory name, or volume label syntax is incorrect: '".kube'
+│ Traceback (most recent call last):
+│   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\knack/cli.py", line 233, in invoke
+│   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\azure/cli/core/commands/__init__.py", line 663, in execute
+│   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\azure/cli/core/commands/__init__.py", line 726, in _run_jobs_serially
+│   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\azure/cli/core/commands/__init__.py", line 697, in _run_job
+│   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\azure/cli/core/commands/__init__.py", line 333, in __call__
+│   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\azure/cli/core/commands/command_operation.py", line 121, in handler
+│   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\azure/cli/command_modules/acs/custom.py", line 1089, in aks_get_credentials
+│   File "D:\a\1\s\build_scripts\windows\artifacts\cli\Lib\site-packages\azure/cli/command_modules/acs/custom.py", line 1207, in _print_or_merge_credentials
+│   File "os.py", line 225, in makedirs
+│ OSError: [WinError 123] The filename, directory name, or volume label syntax is incorrect: '".kube'
+│ To open an issue, please run: 'az feedback'
+│
+╵
+╷
+│ Error: Post "http://localhost/api/v1/namespaces": dial tcp [::1]:80: connectex: No connection could be made because the target machine actively refused it.
+
+
+
+
+az aks get-credentials -n ${azurerm_kubernetes_cluster.aks.name} -g ${azurerm_resource_group.rg.name} --file \".kube/${azurerm_kubernetes_cluster.aks.name}\" --admin --overwrite-existing"
+
+
+output:
+
+Outputs:
+
+aks_cluster_id = "/subscriptions/5cf19617-a9df-4fa7-a224-12d149e05cc2/resourcegroups/aks-resource-group/providers/Microsoft.ContainerService/managedClusters/myAKSCluster"
+
+
+
+====================
+
+1. export KUBE_CONFIG_PATH=~/.kube/config
+2. terraform destro
